@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,19 @@ namespace PdfReader.Services
 {
     internal class MainPageReader
     {
+        const string Url = "https://metanit.com/sharp/";
+        private readonly string ProxyKey;
+        private HttpClient httpClient = new();
         public MainPageReader()
         {
-
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddUserSecrets<Program>()
+                .Build();
+            ProxyKey = config["Proxy"];
         }
-        const string Url = "https://metanit.com/sharp/";
-        private HttpClient httpClient = new();
         private async Task<HtmlDocument> GetHtmlDoc()
         {
-            var metanit = httpClient.GetAsync($"https://proxy.scrapeops.io/v1/?api_key=eb3c35e0-8630-4739-9f3d-638e9c8f1e55&url={Url}");
+            var metanit = httpClient.GetAsync($"https://proxy.scrapeops.io/v1/?api_key={ProxyKey}&url={Url}");
             var stringResult = await metanit.Result.Content.ReadAsStringAsync();
             var document = new HtmlDocument();
             document.LoadHtml(stringResult);

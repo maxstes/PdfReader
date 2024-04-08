@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Microsoft.Extensions.Configuration;
 using PdfSharp.Snippets.Drawing;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,22 @@ namespace PdfReader.Services
 {
     internal class HM
     {
-        private const string Proxy = "https://proxy.scrapeops.io/v1/?api_key=eb3c35e0-8630-4739-9f3d-638e9c8f1e55&url=";
+        
+
+        
+        private readonly string ProxyKey ;
+        private readonly string Proxy ;
         private const string Url = "https://metanit.com/sharp/";
         private string SectionP;
         private string CorrentPath = Url;
         readonly HttpClient httpClient = new HttpClient();
-        public HM() { }
+        public HM() {
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddUserSecrets<Program>()
+                .Build();
+            ProxyKey = config["Proxy"];
+            Proxy = $"https://proxy.scrapeops.io/v1/?api_key={ProxyKey}&url=";
+        }
         private List<(string title, string url)> GetUrlsAndTitles(HtmlDocument document, string nodePath)
         {
             return document.DocumentNode
