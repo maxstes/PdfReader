@@ -14,7 +14,7 @@ namespace PdfReader.Services
         public UIService()
         {
         }
-        private async Task<int> СhouseSection(int countsElems)
+        private int СhouseSection(int countsElems)
         {
             int id = Convert.ToInt32(Console.ReadLine());   
             return id;
@@ -25,9 +25,10 @@ namespace PdfReader.Services
             int id = 0;
             foreach (var element in sections)
             {
-                await Console.Out.WriteLineAsync($"Id: {id} Title: {element.title}"); id++;
+                await Console.Out.WriteLineAsync($"Id: {id} Title: {element.title}");
+                id++;
             }
-            id = await СhouseSection(sections.Count);
+            id = СhouseSection(sections.Count);
             
             string url = sections[id].url;
             return url;

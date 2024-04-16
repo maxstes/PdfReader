@@ -1,29 +1,22 @@
 ﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
 
 namespace PdfReader.Services
 {
-    internal class ImagesService
+    internal class ImagesAndHtmlService
     {
         private PageFormat pageFormat = new();
         private readonly HttpClient httpClient = new();
         private Uri CorrentPath ;
         private string Section;
-        public ImagesService(Uri correntPath,string section)
+        public ImagesAndHtmlService(Uri correntPath,string section)
         {
             CorrentPath = new(correntPath.ToString());
             Section = section;
         }
-        public async Task<string> SaveHtml(ElementsList list)
+        public async Task<string> SaveHtml(List<(string title, string url)> list)
         {
             var nodes = new List<(HtmlNode node, string title)>();
-            foreach (var elementList in list.Sections)
+            foreach (var elementList in list)
             {
                 var UrlPage = elementList.url;
                 string StringPage = await GetStringPageAsync(UrlPage);

@@ -11,37 +11,16 @@ namespace PdfReader.Services
 {
     internal class MainPageReader
     {
-        const string Url = "https://metanit.com/sharp/";
-        private readonly string ProxyKey;
-        private HttpClient httpClient = new();
+        private PageReader hM = new();
         public MainPageReader()
         {
-            IConfigurationRoot config = new ConfigurationBuilder()
-                .AddUserSecrets<Program>()
-                .Build();
-            ProxyKey = config["Proxy"];
         }
-        private async Task<HtmlDocument> GetHtmlDoc()
-        {
-            var metanit = httpClient.GetAsync($"https://proxy.scrapeops.io/v1/?api_key={ProxyKey}&url={Url}");
-            var stringResult = await metanit.Result.Content.ReadAsStringAsync();
-            var document = new HtmlDocument();
-            document.LoadHtml(stringResult);
-            return document;
-        }
-
-        private List<(string title, string url)> GetElements(HtmlDocument document, string nodePath)
-        {
-            return document.DocumentNode
-               .SelectNodes(nodePath)
-               .Select(node => (title: node.InnerText, url: Url + node.Attributes["href"].Value))
-               .ToList();
-        }
+ 
         public async Task<List<(string title,string url)>> MainFunc()
         {
-            var document = await GetHtmlDoc();
+            var document = hM.GetDocument(await hM.GetStringPageAsync());
             
-            var elements = GetElements(document, "//*[@id=\"container\"]/div/div/div/div/div/p/a");
+            var elements = hM.GetUrlsAndTitles(document, "//*[@id=\"container\"]/div/div/div/div/div/p/a");
             return elements; 
             
         }
