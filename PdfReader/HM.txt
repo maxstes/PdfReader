@@ -1,10 +1,24 @@
 Homework, Apr 8th
-Push your project to GitHub repository.
+
+Ready:
+Push your project to GitHub repository. +
+Try fix issue with the URL combining.? +
+Try to fix the error with downloading images +
+
 
 Try to start refactoring your code:
 Try to pick suitable and self-explanatory variable names and method names;
 Try to follow DRY (Dont Repeat Yourself) principle;
-Try fix issue with the URL combining.?
-Try to fix the error with downloading images 
 
 Try to render page to PDF with the PDFSharp
+
+
+Homework, Apr 15th
+Push your changes to GitHub repository.
+
+Continue refactoring your code.
+
+Try to research how to add styles from the CSS to the PDF
+Try to think about next project to do:
+games? (snake, tetris, etc)
+Your guess?
