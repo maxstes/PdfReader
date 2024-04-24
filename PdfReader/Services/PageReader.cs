@@ -7,7 +7,7 @@ namespace PdfReader.Services
     internal class PageReader
     { 
         internal readonly string ProxyKey ;
-        internal readonly string Proxy ;
+        internal readonly string Proxy;
         private const string Url = "https://metanit.com/sharp/";
         private string SectionP;
         private Uri CorrentPath;
@@ -39,9 +39,14 @@ namespace PdfReader.Services
 
         internal async Task<string> GetStringPageAsync()
         {
-            CorrentPath = new($"{CorrentPath}{SectionP}");
+            CorrentPath = new($"{CorrentPath}{SectionP}");//Зробити передачу через параметри пути
 
-            var metanit = await httpClient.GetAsync(CorrentPath);
+            var page = await GetStringPageAsync(CorrentPath.ToString());
+            return page;
+        }
+        internal async Task<string> GetStringPageAsync(string correntPath)
+        {
+            var metanit = await httpClient.GetAsync(correntPath);
             var stringResult = await metanit.Content.ReadAsStringAsync();
             return stringResult;
         }

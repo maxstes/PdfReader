@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,8 +31,17 @@ namespace PdfReader.Services
             {
                 node.Remove();
             }
-
+            doc = RemoveStyleElements(doc);
             return doc;
+        }
+        private HtmlDocument RemoveStyleElements(HtmlDocument document)
+        {
+            var doc = document.DocumentNode.SelectNodes("//div/style");
+            foreach (var item in doc)
+            {
+                item.Remove();
+            }
+            return document;
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using HtmlAgilityPack;
+using static GrapeCity.Documents.Pdf.MarkedContent.TagArtifact;
 
 namespace PdfReader.Services
 {
     internal class ImagesAndHtmlService
     {
         private PageFormat pageFormat = new();
+        private PageReader pageReader = new();
         private readonly HttpClient httpClient = new();
         private Uri CorrentPath ;
         private string Section;
@@ -15,6 +17,7 @@ namespace PdfReader.Services
         }
         public async Task<string> SaveHtml(List<(string title, string url)> list)
         {
+            var style = await GetStyle();
             var nodes = new List<(HtmlNode node, string title)>();
             foreach (var elementList in list)
             {
@@ -33,11 +36,15 @@ namespace PdfReader.Services
 
                 }
                 nodes.Add((contentPage, elementList.title));
-
             }
 
             HtmlDocument doc = new HtmlDocument();
-            nodes.Select(n => doc.DocumentNode.AppendChild(n.node)).ToList();
+            doc.LoadHtml("<html><head></head><body></body></html>");
+      
+            
+            doc.DocumentNode.SelectSingleNode("//head").AppendChild(HtmlNode.CreateNode($"<style>{style}</style>"));
+            nodes.Select(n => doc.DocumentNode.SelectSingleNode("//body").AppendChild(n.node)).ToList();
+
             doc = pageFormat.RemoveTrash(doc);
             doc.Save("Content.html");
             
@@ -71,6 +78,11 @@ namespace PdfReader.Services
             var metanit = await httpClient.GetAsync(nowPath);
             var stringResult = await metanit.Content.ReadAsStringAsync();
             return stringResult;
+        }
+        private async Task<string> GetStyle()
+        {
+            var styles = await pageReader.GetStringPageAsync($"{pageReader.Proxy}https://metanit.com/style44.css?v=2");
+            return styles;
         }
     }
 }
